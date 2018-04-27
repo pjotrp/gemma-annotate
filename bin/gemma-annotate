@@ -136,6 +136,20 @@ ARGV.each do | fn |
       if pos >= pos1 and pos <= pos2
         rec[:anno] = anno
         rec[:url] = 'http://www.uniprot.org/uniprot/'+anno
+        annotxt = anno+'.txt'
+        if !File.exist? annotxt
+          `wget http://www.uniprot.org/uniprot/#{annotxt}`
+        end
+        File.foreach(annotxt).with_index do |line, line_num|
+          if line =~ /^GN\s+/
+            line =~ /Name=([^;]+)/
+            rec[:gene] = $1
+            if line =~ /Synonyms=([^;]+)/
+              rec[:syn] = $1
+            end
+            break
+          end
+        end
       end
     end
     recs << rec
