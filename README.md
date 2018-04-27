@@ -72,6 +72,8 @@ An example lives in [./test/data/input](./test/data/input) and the header looks 
     chr1  4776466 4785677 Q9CPR5-1
     chr1  4807913 4845013 P97823-1
 
+Note: gemma-annotate assumes the BED file is *sorted* by CHR+POS.
+
 ## Creating an annotation file
 
 Run

@@ -8,6 +8,9 @@
 
 USAGE = "GEMMA annotate example:
 
+    gemma-annotate --eval \"p_lrt < 1e-04\" --bed test/data/input/ucsc_mm10_uniprot.bed \\
+        test/data/input/mouse_hs1940_CD8MCH_lmm.assoc.txt
+
 "
 
 basepath = File.dirname(File.dirname(__FILE__))
@@ -23,9 +26,12 @@ options = { show_help: false, source: 'https://github.com/genetics-statistics/ge
 opts = OptionParser.new do |o|
   o.banner = "Usage: #{File.basename($0)} [options]"
 
-  o.on('--bed filen',String, 'BED') do |filen|
-    options[:input] = filen
-    raise "BED input file #{filen} does not exist" if !File.exist?(filen)
+  o.on('--eval expr',String, "Evaluate expression to select SNPs (default all)") do |expr|
+    options[:eval] = expr
+  end
+
+  o.on('--bed filen',String, "Input BED annotation") do |filen|
+    options[:bed] = filen
   end
 
   o.on("--q", "--quiet", "Run quietly") do |q|
@@ -47,3 +53,43 @@ opts = OptionParser.new do |o|
 end
 
 opts.parse!(ARGV)
+
+if options[:show_help] or ARGV.size == 0
+  print opts
+  print USAGE
+  exit 1
+end
+
+if RUBY_VERSION =~ /^1/
+  warning "runs on Ruby 2.x only\n"
+end
+
+bedfn = options[:bed]
+raise "BED input file #{bedfn} does not exist" if !File.exist?(bedfn)
+bed = {} # contains the BED records by chr
+File.foreach(bedfn).with_index do |line, line_num|
+  chr,pos1s,pos2s,anno = line.strip.split(/\t/)
+  chr = chr.sub!(/chr/,"") # edit chr field
+  pos1 = pos1s.to_i
+  pos2 = pos2s.to_i
+  bed[chr] = [] if not bed[chr]
+  bed[chr] << [chr,pos1,pos2,anno]
+end
+
+header = {}
+
+ARGV.each do | fn |
+  File.foreach(fn).with_index do |line, line_num|
+    a = line.strip.split(/\t/)
+    if a[0] = 'chr'
+      header = {}
+      a.each_with_index do | h,i |
+        header[h] = i
+      end
+      p header
+      exit 1
+      next
+    end
+    p a
+  end
+end
