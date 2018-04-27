@@ -20,6 +20,7 @@ VERSION_FILENAME=File.join(basepath,'VERSION')
 version = File.new(VERSION_FILENAME).read.chomp
 
 require 'optionparser'
+require 'json'
 
 options = { show_help: false, source: 'https://github.com/genetics-statistics/gemma-annotate', version: version+' (Pjotr Prins)', date: Time.now.to_s }
 
@@ -27,7 +28,11 @@ opts = OptionParser.new do |o|
   o.banner = "Usage: #{File.basename($0)} [options]"
 
   o.on('--eval expr',String, "Evaluate expression to select SNPs (default all)") do |expr|
-    options[:eval] = expr
+    options[:eval_expr] = expr
+  end
+
+  o.on('--value expr',String, "Evaluate expression to output value") do |expr|
+    options[:eval_value] = expr
   end
 
   o.on('--bed filen',String, "Input BED annotation") do |filen|
@@ -60,6 +65,8 @@ if options[:show_help] or ARGV.size == 0
   exit 1
 end
 
+p options if options[:debug]
+
 if RUBY_VERSION =~ /^1/
   warning "runs on Ruby 2.x only\n"
 end
@@ -78,18 +85,54 @@ end
 
 header = {}
 
+recs = []
+
 ARGV.each do | fn |
   File.foreach(fn).with_index do |line, line_num|
     a = line.strip.split(/\t/)
-    if a[0] = 'chr'
+    if a[0] == 'chr'
       header = {}
       a.each_with_index do | h,i |
         header[h] = i
       end
-      p header
-      exit 1
+      p header if options[:debug]
       next
     end
-    p a
+    chr,snp,poss = a
+    pos = poss.to_i
+    # if search.call(chr,pos)
+    expr = options[:eval_expr]
+    if expr
+      # p a[header['p_lrt']].to_f
+      ps = pos
+      rs = snp
+      af = p_lrt = logl_H1 = l_lme = beta = se = p_wald = p_score = nil
+      ['p_lrt','af','logl_H1','l_lme','beta','se','p_wald','p_score'].each { | var |
+        if expr =~ /#{var}/
+          eval "#{var} = a[header['#{var}']].to_f"
+        end
+      }
+      n_miss = n_mis = n_obs = nil
+      ['n_miss','n_mis','n_obs'].each { | var |
+        if expr =~ /#{var}/
+          eval "#{var} = a[header['#{var}']].to_i"
+        end
+      }
+      allele0 = allele1 = nil
+      ['allele0','allele1'].each { | var |
+        if expr =~ /#{var}/
+          eval "#{var} = a[header['#{var}']]"
+        end
+      }
+      next if not eval(expr)
+    end
+    eval_value = options[:eval_value]
+    rec = { chr: chr, pos: pos, name: snp}
+    if eval_value
+      rec[eval_value] = eval(eval_value)
+    end
+    recs << rec
   end
 end
+
+print recs.to_json

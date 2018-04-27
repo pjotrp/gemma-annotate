@@ -34,7 +34,7 @@ The output should be an assoc.txt file which looks like
     (etc)
 
 Here we are interested in the first 3 columns: chromosome number, SNP
-name, SNP position, and the last columen containing the LRT. We'll
+name, SNP position, and the last column containing the LRT. We'll
 annotate all SNPs that have a (somewhat arbitrary) p_lrt < 1e-04.
 
 ## Creating a BED file for mm10
@@ -81,3 +81,37 @@ Run
     gemma-annotate --eval "p_lrt < 1e-04" \
         --bed test/data/input/ucsc_mm10_uniprot.bed \
         test/data/input/mouse_hs1940_CD8MCH_lmm.assoc.txt
+
+returns
+
+    [{"chr":"1","pos":173365379,"name":"rs13476242"} ... ]
+
+In fact all table columns can be evaluated. This will annotate all SNPs on chr1 that have
+an allele 'A'
+
+    ./bin/gemma-annotate --eval "chr == '1' and allele1 == 'A'" \
+        --bed test/data/input/ucsc_mm10_uniprot.bed \
+        test/data/input/mouse_hs1940_CD8MCH_lmm.assoc.txt
+
+another would be
+
+    ./bin/gemma-annotate --eval "chr == '1' and ps > 182639404 and logl_H1 < 1e-04" \
+        --bed test/data/input/ucsc_mm10_uniprot.bed
+        test/data/input/mouse_hs1940_CD8MCH_lmm.assoc.txt
+
+the eval is simply a Ruby expression. Go wild!
+
+In each case the output is a JSON record.
+
+If you want to include the value of an evaluated column you can pass
+in the --value switch, e.g.
+
+    gemma-annotate --eval "p_lrt < 1e-04" --value p_lrt \
+        --bed test/data/input/ucsc_mm10_uniprot.bed \
+        test/data/input/mouse_hs1940_CD8MCH_lmm.assoc.txt
+
+returns
+
+    [{"chr":"1","pos":173365379,"name":"rs13476242","p_lrt":2.070492e-05} ... ]
+
+some Ruby magic there!
