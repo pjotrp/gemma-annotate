@@ -115,3 +115,7 @@ returns
     [{"chr":"1","pos":173365379,"name":"rs13476242","p_lrt":2.070492e-05 ... ]
 
 some Ruby magic there!
+
+## Copyright
+
+Copyright (c) 2018 Pjotr Prins. See [LICENSE.txt](LICENSE.txt) for further details.
