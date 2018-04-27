@@ -17,6 +17,7 @@ VERSION_FILENAME=File.join(basepath,'VERSION')
 version = File.new(VERSION_FILENAME).read.chomp
 
 require 'optionparser'
+
 options = { show_help: false, source: 'https://github.com/genetics-statistics/gemma-annotate', version: version+' (Pjotr Prins)', date: Time.now.to_s }
 
 opts = OptionParser.new do |o|

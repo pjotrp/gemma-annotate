@@ -76,4 +76,6 @@ An example lives in [./test/data/input](./test/data/input) and the header looks 
 
 Run
 
-    gemma-annotate --eval "p_lrt < 1e-04" --bed test/data/input/ucsc_mm10_uniprot.bed test/data/input/mouse_hs1940_CD8MCH_lmm.assoc.txt
+    gemma-annotate --eval "p_lrt < 1e-04" \
+        --bed test/data/input/ucsc_mm10_uniprot.bed \
+        test/data/input/mouse_hs1940_CD8MCH_lmm.assoc.txt
