@@ -6,6 +6,8 @@
 #
 # Copyright (C) 2018 Pjotr Prins <pjotr.prins@thebird.nl>
 
+MAX_QUERIES = 100
+
 USAGE = "GEMMA annotate example:
 
     gemma-annotate --eval \"p_lrt < 1e-04\" --bed test/data/input/ucsc_mm10_uniprot.bed \\
@@ -87,6 +89,8 @@ header = {}
 
 recs = []
 
+count = 0
+
 ARGV.each do | fn |
   File.foreach(fn).with_index do |line, line_num|
     a = line.strip.split(/\t/)
@@ -125,6 +129,10 @@ ARGV.each do | fn |
         end
       }
       next if not eval(expr)
+    end
+    count += 1
+    if count > MAX_QUERIES
+      raise "Max queries is #{MAX_QUERIES}. Make your filter more restrictive!"
     end
     eval_value = options[:eval_value]
     rec = { chr: chr, pos: pos, name: snp}
