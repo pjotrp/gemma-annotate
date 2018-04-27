@@ -1,3 +1,4 @@
+*.txt
 *.gem
 *.rbc
 /.config

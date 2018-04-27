@@ -145,7 +145,7 @@ ARGV.each do | fn |
             line =~ /Name=([^;]+)/
             rec[:gene] = $1
             if line =~ /Synonyms=([^;]+)/
-              rec[:syn] = $1
+              rec[:synonymes] = $1
             end
             break
           end

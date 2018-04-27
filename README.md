@@ -9,7 +9,7 @@ ann-class and and value.
 
 # Installation
 
-nyi
+Currently the script depends on Ruby and wget.
 
 # Usage
 
@@ -84,7 +84,7 @@ Run
 
 returns
 
-    [{"chr":"1","pos":173365379,"name":"rs13476242"} ... ]
+    [{"chr":"1","pos":173365379,"name":"rs13476242","anno":"Q99N28","url":"http://www.uniprot.org/uniprot/Q99N28","gene":"Cadm3","synonyms":"Igsf4b, Necl1, Syncam3, Tsll1"},...
 
 In fact all table columns can be evaluated. This will annotate all SNPs on chr1 that have
 an allele 'A'
@@ -112,6 +112,6 @@ in the --value switch, e.g.
 
 returns
 
-    [{"chr":"1","pos":173365379,"name":"rs13476242","p_lrt":2.070492e-05} ... ]
+    [{"chr":"1","pos":173365379,"name":"rs13476242","p_lrt":2.070492e-05 ... ]
 
 some Ruby magic there!
