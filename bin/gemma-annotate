@@ -131,6 +131,11 @@ ARGV.each do | fn |
     if eval_value
       rec[eval_value] = eval(eval_value)
     end
+    # Now annotate from BED records
+    bed[chr].each do | chr,pos1,pos2,anno |
+      p anno
+    end
+
     recs << rec
   end
 end
