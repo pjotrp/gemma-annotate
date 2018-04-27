@@ -1,0 +1,48 @@
+#! /usr/bin/env ruby
+
+# gemma-wrapper
+# Author:: Pjotr Prins
+# License:: GPL3
+#
+# Copyright (C) 2018 Pjotr Prins <pjotr.prins@thebird.nl>
+
+USAGE = "GEMMA annotate example:
+
+"
+
+basepath = File.dirname(File.dirname(__FILE__))
+$: << File.join(basepath,'lib')
+
+VERSION_FILENAME=File.join(basepath,'VERSION')
+version = File.new(VERSION_FILENAME).read.chomp
+
+require 'optionparser'
+options = { show_help: false, source: 'https://github.com/genetics-statistics/gemma-annotate', version: version+' (Pjotr Prins)', date: Time.now.to_s }
+
+opts = OptionParser.new do |o|
+  o.banner = "Usage: #{File.basename($0)} [options]"
+
+  o.on('--bed filen',String, 'BED') do |filen|
+    options[:input] = filen
+    raise "BED input file #{filen} does not exist" if !File.exist?(filen)
+  end
+
+  o.on("--q", "--quiet", "Run quietly") do |q|
+    options[:quiet] = true
+  end
+
+  o.on("-v", "--verbose", "Run verbosely") do |v|
+    options[:verbose] = true
+  end
+
+  o.on("--debug", "Show debug messages and keep intermediate output") do |v|
+    options[:debug] = true
+  end
+
+  o.separator ""
+  o.on_tail('-h', '--help', 'display this help and exit') do
+    options[:show_help] = true
+  end
+end
+
+opts.parse!(ARGV)
