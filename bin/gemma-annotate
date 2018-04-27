@@ -135,6 +135,7 @@ ARGV.each do | fn |
     bed[chr].each do | chr,pos1,pos2,anno |
       if pos >= pos1 and pos <= pos2
         rec[:anno] = anno
+        rec[:url] = 'http://www.uniprot.org/uniprot/'+anno
       end
     end
     recs << rec
