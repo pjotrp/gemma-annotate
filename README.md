@@ -116,6 +116,12 @@ returns
 
 some Ruby magic there!
 
+## TODO
+
+1. Use any BED file, currently we are only using uniprot
+2. Introduce a cache in TMPDIR
+3. Use SPARQL to fetch the data
+
 ## Copyright
 
 Copyright (c) 2018 Pjotr Prins. See [LICENSE.txt](LICENSE.txt) for further details.
