@@ -116,11 +116,15 @@ returns
 
 some Ruby magic there!
 
-## TODO
+## NOTES
+
+The following can be improved
 
 1. Use any BED file, currently we are only using uniprot
-2. Introduce a cache in TMPDIR
-3. Use SPARQL to fetch the data
+2. Parse Gene description
+3. Introduce a cache in TMPDIR
+4. Use SPARQL to fetch the data
+5. Annotate using mygene too http://mygene.info/v2/query?q=mm9.chr12:57795963-57815592&species=mouse
 
 ## Copyright
 
